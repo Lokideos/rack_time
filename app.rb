@@ -16,6 +16,7 @@ class App
   def show_time(query)
     return [status_400, headers, bad_query] unless query[0..6] == FORMAT_QUERY_BEGIN
 
+    body = []
     query = query[7..-1]
     time = query.split('%2C')
 
@@ -24,11 +25,21 @@ class App
       unknown_formats.push(t) unless TIME_FORMATS.include?(t)
     end
 
-    body = []
     body.push("Unkown time format: #{unknown_formats}") if unknown_formats.length > 0
     return [status_400, headers, body] if body.length > 0
 
-    body.push(time.last)
+    final_string = ""
+    time.each do |t|
+      final_string += "#{Time.now.year}-" if t == "year"
+      final_string += "#{Time.now.month}-" if t == "month"
+      final_string += "#{Time.now.day}-" if t == "day"
+      final_string += "#{Time.now.hour}-" if t == "hour"
+      final_string += "#{Time.now.min}-" if t == "minute"
+      final_string += "#{Time.now.sec}-" if t == "second"
+    end
+
+    final_string.chomp!("-")
+    body.push("#{final_string}\n")
 
     [status_200, headers, body]
   end
