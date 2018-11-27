@@ -1,19 +1,34 @@
 class App
   TIME_PATH = "/time"
   FORMAT_QUERY_BEGIN = "format="
+  TIME_FORMATS = ["year", "month", "day", "hour", "minute", "second"]
 
   def call(env)
     if env["PATH_INFO"] == TIME_PATH
       show_time(env["QUERY_STRING"])
     else
       [status_404, headers, body]
-    end   
+    end
   end
 
   private
 
   def show_time(query)
     return [status_400, headers, bad_query] unless query[0..6] == FORMAT_QUERY_BEGIN
+
+    query = query[7..-1]
+    time = query.split('%2C')
+
+    unknown_formats = []
+    time.each do |t|
+      unknown_formats.push(t) unless TIME_FORMATS.include?(t)
+    end
+
+    body = []
+    body.push("Unkown time format: #{unknown_formats}") if unknown_formats.length > 0
+    return [status_400, headers, body] if body.length > 0
+
+    body.push(time.last)
 
     [status_200, headers, body]
   end
