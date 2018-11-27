@@ -30,12 +30,7 @@ class App
 
     final_string = ""
     time.each do |t|
-      final_string += "#{Time.now.year}-" if t == "year"
-      final_string += "#{Time.now.month}-" if t == "month"
-      final_string += "#{Time.now.day}-" if t == "day"
-      final_string += "#{Time.now.hour}-" if t == "hour"
-      final_string += "#{Time.now.min}-" if t == "minute"
-      final_string += "#{Time.now.sec}-" if t == "second"
+      final_string += "#{ Time.now.send(t) }-"
     end
 
     final_string.chomp!("-")
