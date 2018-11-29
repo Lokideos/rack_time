@@ -7,7 +7,7 @@ class App
     if env["PATH_INFO"] == TIME_PATH
       show_time(env["QUERY_STRING"])
     else
-      [status_404, headers, body]
+      not_found_response
     end
   end
 
@@ -55,12 +55,16 @@ class App
     { 'Content-Type' => 'text/plain' }
   end
 
-  def body
-    ["Some time"]
+  def bad_path
+    ["Bad path\n"]
   end
 
   def bad_query
     ["Bad Query\n"]
+  end
+
+  def not_found_response
+    [status_404, headers, bad_path]
   end
 
 end
