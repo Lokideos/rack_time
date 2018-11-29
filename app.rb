@@ -4,16 +4,20 @@ class App
   TIME_FORMATS = ["year", "month", "day", "hour", "minute", "second"]
 
   def call(env)
-    if env["PATH_INFO"] == TIME_PATH
-      show_time(env["QUERY_STRING"])
-    else
-      not_found_response
-    end
+    request = Rack::Request.new(env)
+
+    result = time_response(request.query_string) if request.path == TIME_PATH
+    result ||= not_found_response
+
+    response = Rack::Response.new(result[2])
+    response.set_header(result[1].keys.first, result[1].values.first)
+    response.status = result[0]
+    response.finish
   end
 
   private
 
-  def show_time(query)
+  def time_response(query)
     return [status_400, headers, bad_query] unless query[0..6] == FORMAT_QUERY_BEGIN
 
     body = []
