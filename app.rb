@@ -18,7 +18,7 @@ class App
   private
 
   def time_response(query)
-    return [status_400, headers, bad_query] unless query[0..6] == FORMAT_QUERY_BEGIN
+    return [400, headers, bad_query] unless query[0..6] == FORMAT_QUERY_BEGIN
 
     body = []
     query = query[7..-1]
@@ -30,7 +30,7 @@ class App
     end
 
     body.push("Unkown time format: #{unknown_formats}") if unknown_formats.length > 0
-    return [status_400, headers, body] if body.length > 0
+    return [400, headers, body] if body.length > 0
 
     final_string = ""
     time.each do |t|
@@ -40,19 +40,7 @@ class App
     final_string.chomp!("-")
     body.push("#{final_string}\n")
 
-    [status_200, headers, body]
-  end
-
-  def status_200
-    200
-  end
-
-  def status_400
-    400
-  end
-
-  def status_404
-    404
+    [200, headers, body]
   end
 
   def headers
@@ -68,7 +56,7 @@ class App
   end
 
   def not_found_response
-    [status_404, headers, bad_path]
+    [404, headers, bad_path]
   end
 
 end
