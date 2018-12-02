@@ -32,6 +32,8 @@ class App
     calculator = TimeCalculator.new(time)
     body.push(calculator.form_time_string)
 
+    return [400, body] if body[0][0..6] == "Unknown"
+
     [200, body]
   end
 
