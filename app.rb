@@ -23,7 +23,7 @@ class App
   private
 
   def time_response(query)
-    return [400, bad_query] unless query[0..6] == FORMAT_QUERY_BEGIN
+    return [400, bad_query] unless query_in_right_format?(query)
 
     body = []
     query = query[7..-1]
@@ -49,4 +49,7 @@ class App
     [404, bad_path]
   end
 
+  def query_in_right_format?(query)
+    query[0..6] == FORMAT_QUERY_BEGIN
+  end
 end
