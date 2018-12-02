@@ -11,7 +11,7 @@ class TimeCalculator
       unknown_formats.push(t) unless TIME_FORMATS.include?(t)
     end
 
-    return ("Unkown time format: #{unknown_formats}\n") if unknown_formats.length > 0    
+    return ("Unkown time format: #{unknown_formats}\n") if unknown_formats.any?
 
     final_string = ""
     @time.each do |t|
