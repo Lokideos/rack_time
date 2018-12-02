@@ -2,7 +2,7 @@ class TimeCalculator
   TIME_FORMATS = ["year", "month", "day", "hour", "min", "sec"]
 
   def initialize(time)
-    @time = time
+    @time = time.split(',')
   end
 
   def form_time_string
