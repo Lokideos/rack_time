@@ -10,8 +10,7 @@ class App
     response.set_header('Content-Type', 'text/plain')
 
     if request.path == TIME_PATH
-      response.status = time_response(request.params).first
-      response.body = time_response(request.params).last
+      time_response(request, response)
     else
       not_found_response(response)
     end
@@ -20,16 +19,19 @@ class App
   end
 
   private
-  def time_response(params)
-    return [400, bad_query] unless has_format_params?(params)
+  def time_response(request, response)
+    params = request.params
 
-    body = []
+    unless has_format_params?(params)
+      response.status = 400
+      response.body = bad_query
+      return
+    end
+
     calculator = TimeCalculator.new(params['format'])
-    body.push(calculator.form_time_string)
+    response.body.push(calculator.form_time_string)
 
-    return [400, body] if body[0][0..6] == "Unknown"
-
-    [200, body]
+    response.body[0][0..6] == "Unknown" ? response.status = 200 : response.status = 400
   end
 
   def bad_path
@@ -46,6 +48,6 @@ class App
   end
 
   def has_format_params?(params)
-    params.keys.include?(FORMAT_QUERY_BEGIN)
+    params.keys.include?(FORMAT_QUERY_BEGIN) && params['format']
   end
 end
