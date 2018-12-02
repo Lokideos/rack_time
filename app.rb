@@ -13,8 +13,7 @@ class App
       response.status = time_response(request.query_string).first
       response.body = time_response(request.query_string).last
     else
-      response.status = not_found_response.first
-      response.body = not_found_response.last    
+      not_found_response(response)
     end
 
     response.finish
@@ -45,8 +44,9 @@ class App
     ["Bad Query\n"]
   end
 
-  def not_found_response
-    [404, bad_path]
+  def not_found_response(response)
+    response.status = 404
+    response.body = bad_path
   end
 
   def query_in_right_format?(query)
